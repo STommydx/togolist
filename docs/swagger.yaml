@@ -1,0 +1,197 @@
+basePath: /v1
+definitions:
+  dto.CreateListInput:
+    properties:
+      description:
+        example: This is my list
+        type: string
+      priority:
+        example: 0
+        type: integer
+      title:
+        example: My List
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  dto.HealthzResult:
+    properties:
+      details:
+        $ref: '#/definitions/dto.HealthzResultDetails'
+      status:
+        enum:
+        - ok
+        - error
+        example: ok
+        type: string
+    type: object
+  dto.HealthzResultDetail:
+    properties:
+      status:
+        enum:
+        - ok
+        - error
+        example: ok
+        type: string
+    type: object
+  dto.HealthzResultDetails:
+    properties:
+      db:
+        $ref: '#/definitions/dto.HealthzResultDetail'
+    type: object
+  dto.List:
+    properties:
+      description:
+        example: This is my list
+        type: string
+      id:
+        example: 1
+        type: integer
+      priority:
+        example: 0
+        type: integer
+      title:
+        example: My List
+        type: string
+    type: object
+  dto.UpdateListInput:
+    properties:
+      description:
+        example: This is my list
+        type: string
+      id:
+        example: 1
+        type: integer
+      priority:
+        example: 0
+        type: integer
+      title:
+        example: My List
+        type: string
+    required:
+    - id
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is an API for ToGo List application
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: ToGo List API
+  version: "1.0"
+paths:
+  /healthz:
+    get:
+      description: Health Checking for API services
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HealthzResult'
+      summary: Health Checking
+  /lists:
+    get:
+      description: Get all Lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.List'
+            type: array
+      summary: Get All Lists
+    post:
+      consumes:
+      - application/json
+      description: Create a single List
+      parameters:
+      - description: Create List
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateListInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.List'
+      summary: Create List
+  /lists/{id}:
+    delete:
+      description: Delete a single List
+      parameters:
+      - description: List ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List deleted
+          schema:
+            $ref: '#/definitions/dto.List'
+        "404":
+          description: List not found
+          schema:
+            type: string
+      summary: Delete List
+    get:
+      description: Get a single List
+      parameters:
+      - description: List ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.List'
+        "404":
+          description: List not found
+          schema:
+            type: string
+      summary: Get One List
+    put:
+      consumes:
+      - application/json
+      description: Update a single List
+      parameters:
+      - description: List ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update List
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateListInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.List'
+        "404":
+          description: List not found
+          schema:
+            type: string
+      summary: Update List
+swagger: "2.0"
